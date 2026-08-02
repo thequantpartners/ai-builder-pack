@@ -1,7 +1,8 @@
 const checkoutUrl = import.meta.env.VITE_CHECKOUT_URL?.trim()
-const supportEmail = import.meta.env.VITE_SUPPORT_EMAIL?.trim() || 'hola@quantpartners.pro'
+const supportEmail = import.meta.env.VITE_SUPPORT_EMAIL?.trim() || 'partners@thequantpartners.com'
 const whatsappNumber = import.meta.env.VITE_WHATSAPP_NUMBER?.trim() || '51924464410'
 const whatsappMessage = encodeURIComponent('Hola, quiero recibir información del AI Builder Pack de S/99')
+const supportMessage = encodeURIComponent('Hola, ya pagué el AI Builder Pack y todavía no recibí el archivo. ¿Me pueden ayudar?')
 
 export const siteConfig = {
   brand: 'AI BUILDER / PACK',
@@ -9,6 +10,7 @@ export const siteConfig = {
   currency: 'S/',
   purchaseLabel: 'Obtener el pack',
   purchaseUrl: checkoutUrl || `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`,
+  supportUrl: `https://wa.me/${whatsappNumber}?text=${supportMessage}`,
   supportEmail,
   whatsappNumber,
 } as const
