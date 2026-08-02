@@ -7,3 +7,6 @@ dist-ssr
 .vercel
 *.local
 *.log
+*.tsbuildinfo
+vite.config.js
+vite.config.d.ts
