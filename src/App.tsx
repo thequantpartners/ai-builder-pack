@@ -109,6 +109,36 @@ function ProofBlock() {
   return <div className="version-panel"><div className="version-head"><span>AI BUILDER PACK / V0.1</span><strong>LISTA PARA ADAPTAR</strong></div><div className="version-lines"><div><FileCode2 size={18} /><span><b>Herramienta principal</b> para conservar el avance</span><em>incluida</em></div><div><BookOpen size={18} /><span><b>Guías y ejemplos</b> para instalar y adaptar</span><em>incluidos</em></div><div><Network size={18} /><span><b>Mapas visuales</b> para probar y extender</span><em>beta</em></div></div><div className="version-note"><strong>Qué no estás comprando:</strong> hosting, cuentas de IA, despliegue, integraciones, personalización ni soporte ilimitado. La implementación se cotiza aparte.</div></div>
 }
 
+function CheckoutPage({ product }: { product: 'pro' | 'complete' }) {
+  const isComplete = product === 'complete'
+  const price = isComplete ? '150' : '99'
+  const title = isComplete ? 'Pack completo' : 'AI Builder Pack Pro'
+  const backLabel = isComplete ? 'Volver al pack completo' : 'Volver al AI Builder Pack'
+
+  return (
+    <main className="checkout-page shell">
+      <a className="checkout-back" href="/#comprar">← {backLabel}</a>
+      <div className="checkout-layout">
+        <section className="checkout-intro">
+          <span className="kicker">CHECKOUT / PAGO SEGURO</span>
+          <h1>Tu punto<br /><i>de partida.</i></h1>
+          <p>Estás comprando <strong>{title}</strong> por un pago único de <strong>S/{price}</strong>.</p>
+          <ul className="checkout-summary">
+            <li><Check size={15} /> Entrega digital coordinada después del pago</li>
+            <li><Check size={15} /> Base para prototipar y adaptar</li>
+            <li><Check size={15} /> Hosting, implementación e integraciones no incluidos</li>
+          </ul>
+        </section>
+        <section className="checkout-card" aria-label={`Pago de ${title}`}>
+          <div className="checkout-card-head"><span>{title}</span><strong>S/{price}</strong></div>
+          <MercadoPagoCheckout product={product} />
+          <p className="checkout-help">¿Prefieres coordinarlo por WhatsApp? <a href={isComplete ? siteConfig.completeUrl : siteConfig.purchaseUrl}>Escríbenos aquí.</a></p>
+        </section>
+      </div>
+    </main>
+  )
+}
+
 function StickyBuyBar() {
   const [visible, setVisible] = useState(true)
 
@@ -171,7 +201,7 @@ function App() {
 
       <section className="bridge-section shell"><PullQuote tone="pink">La idea estaba ahí. El contexto se fue. La base queda. Ahora puedes volver.</PullQuote><p>El tiempo que reduces de reconstrucción vuelve a estar disponible para decidir, revisar y construir. No se convierte automáticamente en ventas, clientes o ingresos: vuelve a ser espacio de trabajo.</p></section>
 
-      <section className="buy-section shell" id="comprar"><div className="buy-panel"><div className="buy-copy"><span className="kicker">ENTRADA 11 / HOJA DE PEDIDO</span><h2>Elige tu punto<br /><i>de partida.</i></h2><p>Si quieres una base para adaptar, puedes iniciar la conversación por WhatsApp. Si necesitas que alguien la instale o la conecte, también podemos revisar ese alcance aparte.</p><div className="decision-list"><span><Check size={15} /> Quiero la base para adaptarla</span><span><Wrench size={15} /> Necesito implementación a medida</span></div></div><div className="offer-grid"><article className="price-card"><div className="price-top"><span>PACK PRO</span><span>BASE</span></div><div className="price"><small>S/</small>99</div><p>AI Builder Pack Pro · pago único</p><ul className="offer-points"><li>Herramienta para conservar contexto</li><li>Pantalla de consulta + mapas beta</li><li>Manuales y documentación</li><li>Base para prototipar y adaptar</li></ul><div className="checkout-trigger"><MercadoPagoCheckout product="pro" /></div><small className="secure-note">Pago único · checkout seguro · entrega digital coordinada</small></article><article className="price-card complete-card"><div className="price-top"><span>PACK COMPLETO</span><span>AMPLIADO</span></div><div className="price"><small>S/</small>150</div><p>Pack Pro + Lead Conversion Stack</p><ul className="offer-points"><li>Todo el AI Builder Pack Pro</li><li>Widget de leads + setter virtual</li><li>Para explorar implementaciones comerciales</li><li>Alcance operativo confirmado por WhatsApp</li></ul><div className="checkout-trigger"><MercadoPagoCheckout product="complete" /></div><small className="secure-note">Pago único · checkout seguro · entrega digital coordinada</small></article><p className="buy-disclaimer"><strong>Importante:</strong> ambos son bases para prototipar y adaptar. Hosting, credenciales, despliegue, integraciones, soporte ilimitado y resultados garantizados no están incluidos.</p></div></div></section>
+      <section className="buy-section shell" id="comprar"><div className="buy-panel"><div className="buy-copy"><span className="kicker">ENTRADA 11 / HOJA DE PEDIDO</span><h2>Elige tu punto<br /><i>de partida.</i></h2><p>Si quieres una base para adaptar, puedes iniciar la conversación por WhatsApp. Si necesitas que alguien la instale o la conecte, también podemos revisar ese alcance aparte.</p><div className="decision-list"><span><Check size={15} /> Quiero la base para adaptarla</span><span><Wrench size={15} /> Necesito implementación a medida</span></div></div><div className="offer-grid"><article className="price-card"><div className="price-top"><span>PACK PRO</span><span>BASE</span></div><div className="price"><small>S/</small>99</div><p>AI Builder Pack Pro · pago único</p><ul className="offer-points"><li>Herramienta para conservar contexto</li><li>Pantalla de consulta + mapas beta</li><li>Manuales y documentación</li><li>Base para prototipar y adaptar</li></ul><a className="button button-primary full" href="/checkout?product=pro">Lo quiero por S/99 <ArrowUpRight size={17} /></a><small className="secure-note">Pago único · checkout seguro · entrega digital coordinada</small></article><article className="price-card complete-card"><div className="price-top"><span>PACK COMPLETO</span><span>AMPLIADO</span></div><div className="price"><small>S/</small>150</div><p>Pack Pro + Lead Conversion Stack</p><ul className="offer-points"><li>Todo el AI Builder Pack Pro</li><li>Widget de leads + setter virtual</li><li>Para explorar implementaciones comerciales</li><li>Alcance operativo confirmado por WhatsApp</li></ul><a className="button button-secondary full" href="/checkout?product=complete">Lo quiero todo por S/150 <ArrowUpRight size={17} /></a><small className="secure-note">Pago único · checkout seguro · entrega digital coordinada</small></article><p className="buy-disclaimer"><strong>Importante:</strong> ambos son bases para prototipar y adaptar. Hosting, credenciales, despliegue, integraciones, soporte ilimitado y resultados garantizados no están incluidos.</p></div></div></section>
 
       <section className="closing-note shell"><PullQuote>Comprar no significa comprar una promesa. Significa dejar de reconstruir la base desde cero.</PullQuote><a className="text-link" href="#comprar">Ver las opciones <ChevronRight size={16} /></a></section>
 
