@@ -23,9 +23,11 @@ export default async function handler(req: RequestLike, res: ResponseLike) {
   if (!response.ok) return res.status(response.status).json({ error: data.message ?? 'Payment request failed' })
   const paymentId = String(data.id ?? '')
   if (data.status === 'approved' && paymentId) {
-    const email = String((paymentData.payer as Record<string, unknown> | undefined)?.email ?? '') || undefined
+    const payer = (paymentData.payer ?? {}) as Record<string, unknown>
+    const email = String(payer.email ?? '') || undefined
+    const phone = String(((payer.phone ?? {}) as Record<string, unknown>).number ?? '') || undefined
     const existing = await getOrder(paymentId)
-    if (!existing) await upsertPaidOrder({ paymentId, productId: product.id, amount: product.amount, currency: product.currency, email, status: 'paid' })
+    if (!existing) await upsertPaidOrder({ paymentId, productId: product.id, amount: product.amount, currency: product.currency, email, phone, status: 'paid' })
   }
   return res.status(response.status).json({ id: data.id, status: data.status, statusDetail: data.status_detail })
 }

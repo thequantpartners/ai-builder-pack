@@ -14,6 +14,7 @@ export function MercadoPagoCheckout({ product = 'pro' }: { product?: Product }) 
   const [state, setState] = useState<CheckoutState>('loading')
   const [message, setMessage] = useState('Preparando el checkout seguro…')
   const [downloadUrl, setDownloadUrl] = useState<string>()
+  const [whatsapp, setWhatsapp] = useState('')
   const amount = product === 'complete' ? 150 : 99
   const label = product === 'complete' ? 'Lo quiero todo por S/150' : 'Lo quiero por S/99'
   const publicKey = siteConfig.mercadoPagoPublicKey
@@ -44,11 +45,11 @@ export function MercadoPagoCheckout({ product = 'pro' }: { product?: Product }) 
   if (state === 'pending') return <div className="checkout-result pending" role="status"><strong>Pago pendiente.</strong><p>{message}</p></div>
   if (state === 'error') return <p className="checkout-status error" role="alert">{message} <a href={siteConfig.purchaseUrl}>Contactar por WhatsApp</a></p>
 
-  return <div className="mercadopago-checkout" aria-live="polite"><p className="checkout-brick-label">{label} · pago seguro dentro de la página</p><Payment initialization={{ amount }} customization={{ paymentMethods: { creditCard: 'all', debitCard: 'all' } }} locale="es-PE" onError={() => { setState('error'); setMessage('El checkout no pudo cargarse. Puedes continuar por WhatsApp.') }} onSubmit={async ({ formData }) => {
+  return <div className="mercadopago-checkout" aria-live="polite"><p className="checkout-brick-label">{label} · pago seguro dentro de la página</p><label className="checkout-field">WhatsApp para recibir el ZIP<input type="tel" value={whatsapp} onChange={(event) => setWhatsapp(event.target.value)} placeholder="519XXXXXXXX" required /></label><Payment initialization={{ amount }} customization={{ paymentMethods: { creditCard: 'all', debitCard: 'all' } }} locale="es-PE" onError={() => { setState('error'); setMessage('El checkout no pudo cargarse. Puedes continuar por WhatsApp.') }} onSubmit={async ({ formData }) => {
     setState('processing')
     setMessage('Confirmando los datos del pago…')
     try {
-      const response = await fetch('/api/create-payment', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ productId: product === 'complete' ? 'ai-builder-pack-complete' : 'ai-builder-pack-pro', transactionAmount: amount, paymentData: formData }) })
+      const response = await fetch('/api/create-payment', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ productId: product === 'complete' ? 'ai-builder-pack-complete' : 'ai-builder-pack-pro', transactionAmount: amount, paymentData: { ...formData, payer: { ...(formData.payer ?? {}), phone: { number: whatsapp.replace(/\D/g, '') } } } }) })
       const result = await response.json() as PaymentResponse
       if (!response.ok) throw new Error(result.error ?? 'Payment request failed')
       if (result.status === 'approved' && result.id) {

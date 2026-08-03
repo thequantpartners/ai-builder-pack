@@ -8,13 +8,12 @@ type ResponseLike = { status: (code: number) => ResponseLike; json: (body: unkno
 
 function header(req: RequestLike, name: string) { const value = req.headers?.[name] ?? req.headers?.[name.toLowerCase()]; return Array.isArray(value) ? value[0] : value }
 
-async function requestRailwayDelivery(product: string, paymentId: string) {
-  const url = process.env.RAILWAY_DELIVERY_URL?.trim(); const token = process.env.RAILWAY_DELIVERY_TOKEN?.trim()
+async function requestRailwayDelivery(product: string, paymentId: string, phone?: string) {
+  const url = process.env.RAILWAY_BOT_URL?.trim(); const token = process.env.RAILWAY_DELIVERY_TOKEN?.trim()
   if (!url || !token) return undefined
-  const response = await fetch(`${url.replace(/\\/$/, '')}/delivery/link`, { method: 'POST', headers: { Authorization: `Bearer ${token}`, 'X-Delivery-Token': token, 'Content-Type': 'application/json' }, body: JSON.stringify({ product, paymentId }) })
+  const response = await fetch(`${url.replace(/\\/$/, '')}/webhooks/checkout-delivery`, { method: 'POST', headers: { Authorization: `Bearer ${token}`, 'X-Delivery-Token': token, 'Content-Type': 'application/json' }, body: JSON.stringify({ product: product === 'complete' ? 'ai-builder-pack-complete' : 'ai-builder-pack-pro', paymentId, phone }) })
   if (!response.ok) return undefined
-  const data = await response.json() as { url?: string }
-  return data.url
+  return response.ok
 }
 function validSignature(req: RequestLike, paymentId: string) {
   const secret = process.env.MERCADOPAGO_WEBHOOK_SECRET
@@ -42,12 +41,14 @@ export default async function handler(req: RequestLike, res: ResponseLike) {
   if (!approved) return res.status(200).json({ received: true, paymentId, approved: false, status: payment.status })
   const existing = await getOrder(paymentId)
   if (existing?.status === 'delivered') return res.status(200).json({ received: true, paymentId, approved: true, alreadyDelivered: true })
-  const email = String((payment.payer as Record<string, unknown> | undefined)?.email ?? '') || undefined
+  const payer = (payment.payer ?? {}) as Record<string, unknown>
+  const email = String(payer.email ?? '') || undefined
+  const phone = String(((payer.phone ?? {}) as Record<string, unknown>).number ?? '') || undefined
   const secret = process.env.DOWNLOAD_SIGNING_SECRET
   if (!secret) return res.status(503).json({ error: 'Delivery is not configured' })
   const link = existing?.downloadToken ? { token: existing.downloadToken, expiresAt: existing.downloadExpiresAt! } : createDownloadToken(paymentId, product.id, secret)
-  const stored = await upsertPaidOrder({ paymentId, productId: product.id, amount: product.amount, currency: product.currency, email, status: 'paid', downloadToken: link.token, downloadExpiresAt: link.expiresAt })
-  const deliveryUrl = stored.deliveryUrl ?? await requestRailwayDelivery(product.key, paymentId)
-  if (deliveryUrl && !stored.deliveryUrl) await markDelivered(paymentId, { downloadToken: link.token, downloadExpiresAt: link.expiresAt, deliveryUrl })
+  const stored = await upsertPaidOrder({ paymentId, productId: product.id, amount: product.amount, currency: product.currency, email, phone, status: 'paid', downloadToken: link.token, downloadExpiresAt: link.expiresAt })
+  const deliveryUrl = stored.deliveryUrl ?? await requestRailwayDelivery(product.key, paymentId, phone)
+  if (deliveryUrl && !stored.deliveryUrl) await markDelivered(paymentId, { downloadToken: link.token, downloadExpiresAt: link.expiresAt, deliveryUrl: undefined })
   return res.status(200).json({ received: true, paymentId, approved: true, downloadReady: Boolean(deliveryUrl) })
 }
