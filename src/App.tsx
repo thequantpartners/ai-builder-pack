@@ -117,7 +117,7 @@ function CheckoutPage({ product }: { product: 'pro' | 'complete' }) {
 
   return (
     <main className="checkout-page shell">
-      <a className="checkout-back" href="#comprar">← {backLabel}</a>
+      <a className="checkout-back" href="/#comprar">← {backLabel}</a>
       <div className="checkout-layout">
         <section className="checkout-intro">
           <span className="kicker">CHECKOUT / PAGO SEGURO</span>
