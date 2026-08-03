@@ -132,7 +132,6 @@ function CheckoutPage({ product }: { product: 'pro' | 'complete' }) {
         <section className="checkout-card" aria-label={`Pago de ${title}`}>
           <div className="checkout-card-head"><span>{title}</span><strong>S/{price}</strong></div>
           <MercadoPagoCheckout product={product} />
-          <p className="checkout-help">¿Prefieres coordinarlo por WhatsApp? <a href={isComplete ? siteConfig.completeUrl : siteConfig.purchaseUrl}>Escríbenos aquí.</a></p>
         </section>
       </div>
     </main>
