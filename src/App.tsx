@@ -155,6 +155,12 @@ function StickyBuyBar() {
 }
 
 function App() {
+  const checkoutProduct = new URLSearchParams(window.location.search).get('checkout')
+
+  if (checkoutProduct === 'pro' || checkoutProduct === 'complete') {
+    return <CheckoutPage product={checkoutProduct} />
+  }
+
   return (
     <main id="top">
       <nav className="nav shell">
