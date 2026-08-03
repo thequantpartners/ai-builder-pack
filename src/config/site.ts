@@ -5,6 +5,7 @@ const messages = {
   complete: 'Hola, me interesa el Pack completo por S/150: AI Builder Pack Pro + Lead Conversion Stack. Quiero conocer si encaja con mi proyecto.',
 }
 const supportMessage = encodeURIComponent('Hola, ya pagué el AI Builder Pack y todavía no recibí el archivo. ¿Me pueden ayudar?')
+const mercadoPagoPublicKey = import.meta.env.VITE_MERCADOPAGO_PUBLIC_KEY?.trim() || ''
 const whatsappUrl = (message: string) => `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`
 
 export const siteConfig = {
@@ -19,4 +20,5 @@ export const siteConfig = {
   supportUrl: `https://wa.me/${whatsappNumber}?text=${supportMessage}`,
   supportEmail,
   whatsappNumber,
+  mercadoPagoPublicKey,
 } as const
