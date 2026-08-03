@@ -19,13 +19,11 @@ export default async function handler(req: RequestLike, res: ResponseLike) {
     method: 'POST',
     headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json', 'X-Idempotency-Key': idempotencyKey },
     body: JSON.stringify({
+      ...paymentData,
       transaction_amount: PRODUCT.amount,
       description: PRODUCT.title,
       external_reference: PRODUCT.id,
       notification_url: `${process.env.APP_BASE_URL ?? ''}/api/mercadopago-webhook`,
-      ...paymentData,
-      transaction_amount: PRODUCT.amount,
-      external_reference: PRODUCT.id,
     }),
   })
   const data = await response.json() as Record<string, unknown>
