@@ -1,15 +1,21 @@
-const checkoutUrl = import.meta.env.VITE_CHECKOUT_URL?.trim()
 const supportEmail = import.meta.env.VITE_SUPPORT_EMAIL?.trim() || 'partners@thequantpartners.com'
 const whatsappNumber = import.meta.env.VITE_WHATSAPP_NUMBER?.trim() || '51924464410'
-const whatsappMessage = encodeURIComponent('Hola, quiero recibir información del AI Builder Pack de S/99')
+const messages = {
+  base: 'Hola, me interesa el AI Builder Pack Pro por S/99. Quiero conocer si encaja con mi proyecto.',
+  complete: 'Hola, me interesa el Pack completo por S/150: AI Builder Pack Pro + Lead Conversion Stack. Quiero conocer si encaja con mi proyecto.',
+}
 const supportMessage = encodeURIComponent('Hola, ya pagué el AI Builder Pack y todavía no recibí el archivo. ¿Me pueden ayudar?')
+const whatsappUrl = (message: string) => `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`
 
 export const siteConfig = {
   brand: 'AI BUILDER / PACK',
   price: '99',
   currency: 'S/',
-  purchaseLabel: 'Obtener el pack',
-  purchaseUrl: checkoutUrl || `https://wa.me/${whatsappNumber}?text=${whatsappMessage}`,
+  purchaseLabel: 'Hablar con el asistente por WhatsApp',
+  purchaseUrl: whatsappUrl(messages.base),
+  completePrice: '150',
+  completeLabel: 'Explorar pack completo por WhatsApp',
+  completeUrl: whatsappUrl(messages.complete),
   supportUrl: `https://wa.me/${whatsappNumber}?text=${supportMessage}`,
   supportEmail,
   whatsappNumber,
