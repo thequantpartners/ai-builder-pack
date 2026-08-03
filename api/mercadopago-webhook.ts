@@ -1,7 +1,7 @@
 import { createHmac, timingSafeEqual } from 'node:crypto'
-import { getProduct } from './catalog'
-import { createDownloadToken } from './delivery'
-import { getOrder, markDelivered, upsertPaidOrder } from './order-store'
+import { getProduct } from './catalog.ts'
+import { createDownloadToken } from './delivery.ts'
+import { getOrder, markDelivered, upsertPaidOrder } from './order-store.ts'
 
 type RequestLike = { method?: string; body?: unknown; headers?: Record<string, string | string[] | undefined> }
 type ResponseLike = { status: (code: number) => ResponseLike; json: (body: unknown) => void }

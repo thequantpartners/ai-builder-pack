@@ -1,5 +1,5 @@
-import { getProduct } from './catalog'
-import { getOrder } from './order-store'
+import { getProduct } from './catalog.ts'
+import { getOrder } from './order-store.ts'
 
 type RequestLike = { method?: string; query?: Record<string, string | string[] | undefined> }
 type ResponseLike = { status: (code: number) => ResponseLike; json: (body: unknown) => void }

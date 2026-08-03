@@ -1,7 +1,7 @@
 import { createHmac, randomBytes, timingSafeEqual } from 'node:crypto'
 import { createReadStream } from 'node:fs'
 import { stat } from 'node:fs/promises'
-import type { Product } from './catalog'
+import type { Product } from './catalog.ts'
 
 export function createDownloadToken(paymentId: string, productId: string, secret: string) {
   const expiresAt = Date.now() + 24 * 60 * 60 * 1000

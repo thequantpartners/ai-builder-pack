@@ -1,6 +1,6 @@
-import { getProduct } from './catalog'
-import { verifyDownloadToken, getPackStream } from './delivery'
-import { getOrder } from './order-store'
+import { getProduct } from './catalog.ts'
+import { verifyDownloadToken, getPackStream } from './delivery.ts'
+import { getOrder } from './order-store.ts'
 
 type RequestLike = { method?: string; query?: Record<string, string | string[] | undefined> }
 type ResponseLike = { status: (code: number) => ResponseLike; setHeader: (name: string, value: string) => void; send: (body: unknown) => void; end: () => void }
