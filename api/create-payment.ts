@@ -1,5 +1,5 @@
-import { getProduct } from './catalog.ts'
-import { getOrder, upsertPaidOrder } from './order-store.ts'
+import { getProduct } from './catalog.js'
+import { getOrder, upsertPaidOrder } from './order-store.js'
 
 type RequestLike = { method?: string; body?: unknown }
 type ResponseLike = { status: (code: number) => ResponseLike; json: (body: unknown) => void }

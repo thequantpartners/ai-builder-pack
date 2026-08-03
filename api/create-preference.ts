@@ -1,4 +1,4 @@
-import { getProduct } from './catalog.ts'
+import { getProduct } from './catalog.js'
 
 type RequestLike = { method?: string; query?: Record<string, string | string[] | undefined> }
 type ResponseLike = { status: (code: number) => ResponseLike; json: (body: unknown) => void }
